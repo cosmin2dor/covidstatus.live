@@ -73,5 +73,5 @@ class Bot(scrapy.Spider):
             'timestamp': time.time()
         }
 
-        with open('data.json', 'w') as outfile:
+        with open('../webapp/data.json', 'w') as outfile:
             json.dump(data, outfile)

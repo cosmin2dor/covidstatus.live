@@ -29,7 +29,7 @@ def index_view(request):
 
     my_country = None
 
-    with open('../fetch/data.json') as json_file:
+    with open('data.json') as json_file:
         data = json.load(json_file)
         try:
             my_country = data['countires'][country]
