@@ -4,7 +4,7 @@ import json
 
 
 def get_client_ip(request):
-    return "188.26.27.31"
+    # return "188.26.27.31"
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
