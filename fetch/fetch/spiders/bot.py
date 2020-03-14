@@ -49,7 +49,8 @@ class Bot(scrapy.Spider):
             active_cases = format_numerical(response.xpath(base_path.format(idx, 7)).get())
             critical = format_numerical(response.xpath(base_path.format(idx, 8)).get())
             total_cases_by_1M = format_numerical(response.xpath(base_path.format(idx, 9)))
-            death_rate = str((float(total_deaths) / int(total_cases)) * 100.0) + ' %'
+            death_rate = float(total_deaths) / int(total_cases) * 100.0
+            death_rate = "%.2f" % death_rate
 
             row = {
                 'total_cases': total_cases,

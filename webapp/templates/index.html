@@ -162,6 +162,7 @@
                                             <th>Total Recovered</th>
                                             <th>Active Cases</th>
                                             <th>Critical Cases</th>
+                                            <th>Mortality Rate</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -175,6 +176,7 @@
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-success">{{ data.total_recovered }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-warning">{{ data.active_cases }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.critical }}</div></td>
+                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.death_rate }}%</div></td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
