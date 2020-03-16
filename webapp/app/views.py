@@ -1,10 +1,10 @@
 from django.shortcuts import render
 import requests
 import json
+from django.core.cache import cache
 
 
 def get_client_ip(request):
-    # return "188.26.27.31"
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -15,17 +15,32 @@ def get_client_ip(request):
 
 def locate_user(request):
     ip = get_client_ip(request)
-    api_key = "6fd4e0d631f6fb7fce324c7e928a3ddd"
+
+    cached = cache.get(ip)
+
+    if cached is not None:
+        return cached
+
+    api_key = "7fc2d6059a4287dfa817005787c2f7cc"
     endpoint = "http://api.ipstack.com/{}?access_key={}".format(ip, api_key)
 
     r = requests.get(endpoint)
     data = r.json()
 
-    return data['country_name'], data['location']['country_flag']
+    country_name = data['country_name']
+
+    if country_name == "United States":
+        country_name = "USA"
+    elif country_name == "United Kingdom":
+        country_name = "UK"
+
+    cache.set(ip, country_name, timeout=None)
+
+    return country_name
 
 
 def index_view(request):
-    country, flag = locate_user(request)
+    country = locate_user(request)
 
     my_country = None
 
@@ -39,7 +54,6 @@ def index_view(request):
         active_cases = int(data['global_cases'].replace(',', '')) - int(data['global_recovered'].replace(',', '')) - int(data['gloabl_deaths'].replace(',', ''))
 
         return render(request, 'index.html', {'location': country,
-                                              'flag': flag,
                                               'global_cases': data['global_cases'],
                                               'global_deaths': data['gloabl_deaths'],
                                               'global_recovered': data['global_recovered'],

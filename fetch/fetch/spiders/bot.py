@@ -41,6 +41,9 @@ class Bot(scrapy.Spider):
             else:
                 country = country[0].strip()
 
+            if country == "Vatican City":
+                continue
+
             total_cases = format_numerical(response.xpath(base_path.format(idx, 2)).get())
             new_cases = format_numerical(response.xpath(base_path.format(idx, 3)).get())
             total_deaths = format_numerical(response.xpath(base_path.format(idx, 4)).get())
