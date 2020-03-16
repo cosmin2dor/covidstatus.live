@@ -3,5 +3,6 @@
 while [ True ]
 do
 	scrapy crawl bot
-	sleep 5m
+	docker cp /root/covidstatus.live/webapp/data.json covid-django:/django/
+	sleep 1m
 done
