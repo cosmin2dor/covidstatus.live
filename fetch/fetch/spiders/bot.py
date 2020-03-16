@@ -26,9 +26,13 @@ class Bot(scrapy.Spider):
     def parse(self, response):
         global_stats = response.css("div.maincounter-number span::text").getall()
 
-        global_cases = format_numerical(global_stats[0])
-        gloabl_deaths = format_numerical(global_stats[1])
-        global_recovered = format_numerical(global_stats[2])
+        # global_cases = format_numerical(global_stats[0])
+        # gloabl_deaths = format_numerical(global_stats[1])
+        # global_recovered = format_numerical(global_stats[2])
+
+        global_cases = 0
+        gloabl_deaths = 0
+        global_recovered = 0
 
         rows = {}
 
@@ -54,6 +58,10 @@ class Bot(scrapy.Spider):
             total_cases_by_1M = format_numerical(response.xpath(base_path.format(idx, 9)))
             death_rate = float(total_deaths) / int(total_cases) * 100.0
             death_rate = "%.2f" % death_rate
+
+            global_cases += int(total_cases)
+            gloabl_deaths += int(total_deaths)
+            global_recovered += int(total_recovered)
 
             row = {
                 'total_cases': total_cases,
