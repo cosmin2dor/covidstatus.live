@@ -17,20 +17,9 @@
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Coronavirus Live Advanced Statistics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="COVID-19 Outbreak Cases, Statistics, Your Country and Worldwide">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
 {% load static %}
 <link href="{% static 'main.css' %}" rel="stylesheet">
 <!-- Hotjar Tracking Code for covidstatus.live -->
@@ -44,6 +33,7 @@
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>
+<script data-ad-client="ca-pub-3261993669263021" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -55,13 +45,15 @@
                         <h1>{{ location }} Corona Virus Live Status</h1>
                     </div>
 
-                    <div class="main-card mb-3 card">
+                {% load humanize %}
+
+                    <div class="main-card mb-2 card">
                         <div class="no-gutters row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-warning">{{ my_country_total_cases }}</div>
+                                            <div class="widget-numbers text-warning" style="font-size: 2.5rem">{{ my_country_total_cases|intcomma }}</div>
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Total Cases</div>
@@ -70,11 +62,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-primary">{{ my_country_new_cases }}</div>
+                                            <div class="widget-numbers text-primary" style="font-size: 2.5rem">{{ my_country_new_cases|intcomma }}</div>
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">New Cases Today</div>
@@ -82,11 +74,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-danger">{{ my_country_total_deaths }}</div>
+                                            <div class="widget-numbers text-danger" style="font-size: 2.5rem">{{ my_country_total_deaths|intcomma }}</div>
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Total Deaths</div>
@@ -94,11 +86,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-danger">{{ my_country_new_deaths }}</div>
+                                            <div class="widget-numbers text-danger" style="font-size: 2.5rem">{{ my_country_new_deaths }}</div>
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">New Deaths Today</div>
@@ -106,14 +98,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <div class="widget-content">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-right ml-0 mr-3">
+                                            <div class="widget-numbers text-danger" style="font-size: 2.5rem">{{ my_country_rate }}</div>
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Mortality Rate</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+{#                            <div class="col-md-2">#}
+{#                                <div class="card card-body" style="box-shadow: none">#}
+{#                                    <h5 class="card-title">Get daily updates about COVID-19 Status!</h5>#}
+{#                                    <button class="btn btn-primary" data-toggle="modal" data-target="#subscriptionModal">#}
+{#                                        SUBSCRIBE#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                            </div>#}
                         </div>
                     </div>
                     <div class="divider mt-0" style="margin-bottom: 30px;"></div>
 
+{#            <div id="chartdiv"></div>#}
+
 
                     <h1>Worldwide Status</h1>
-
-                    {% load humanize %}
 
                     <div class="row">
 
@@ -209,12 +222,24 @@
                         </div>
             </div>
                 <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+                <script src="https://www.amcharts.com/lib/4/core.js"></script>
+                <script src="https://www.amcharts.com/lib/4/maps.js"></script>
+                <script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+                <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
         </div>
     </div>
 <script type="text/javascript" src="{% static 'assets/scripts/main.js' %}"></script>
-<script>setTimeout(function() {
-  location.reload();
-}, 30000);</script>
+<script>
+    {#setTimeout(function() {#}
+    {#    location.reload();#}
+    {#}, 30000);#}
+
+    url = new URL(document.URL);
+
+    if (url.searchParams.get('subscribed')) {
+        console.log("pullaaaa!");
+    }
+</script>
 <script>
     var ctx = document.getElementById('global_distribution').getContext('2d');
     var myPieChart = new Chart(ctx, {
@@ -243,5 +268,141 @@
             },
         }
     });
-</script></body>
+</script>
+<script>
+    /**
+ * ---------------------------------------
+ * This demo was created using amCharts 4.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v4/
+ * ---------------------------------------
+ */
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create map instance
+var chart = am4core.create("chartdiv", am4maps.MapChart);
+
+// Set map definition
+chart.geodata = am4geodata_worldLow;
+
+// Set projection
+chart.projection = new am4maps.projections.Miller();
+
+// Create map polygon series
+var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+// Exclude Antartica
+polygonSeries.exclude = ["AQ"];
+
+// Make map load polygon (like country names) data from GeoJSON
+polygonSeries.useGeodata = true;
+
+// Configure series
+var polygonTemplate = polygonSeries.mapPolygons.template;
+polygonTemplate.tooltipText = "{name}";
+polygonTemplate.polygon.fillOpacity = 0.6;
+
+polygonSeries.heatRules.push({
+    "property": "fill",
+    "target": polygonSeries.mapPolygons.template,
+    "min": am4core.color("#6085ff"),
+    "max": am4core.color("#aa0012")
+});
+
+polygonSeries.data = [
+    {% for name, data in countires.items %}
+        {% if data.total_cases_by_1M != "NAN" %}
+            {
+                "id": "{{ data.country_code }}",
+                "value": {{ data.total_cases_by_1M }},
+            },
+        {% endif %}
+    {% endfor %}
+];
+
+polygonTemplate.propertyFields.fill = "fill";
+
+
+// Create hover state and set alternative fill color
+var hs = polygonTemplate.states.create("hover");
+hs.properties.fill = chart.colors.getIndex(0);
+
+// Add image series
+var imageSeries = chart.series.push(new am4maps.MapImageSeries());
+imageSeries.mapImages.template.propertyFields.longitude = "longitude";
+imageSeries.mapImages.template.propertyFields.latitude = "latitude";
+imageSeries.mapImages.template.tooltipText = "{title}";
+imageSeries.mapImages.template.propertyFields.url = "url";
+
+var circle = imageSeries.mapImages.template.createChild(am4core.Circle);
+circle.radius = 3;
+circle.propertyFields.fill = "color";
+
+var circle2 = imageSeries.mapImages.template.createChild(am4core.Circle);
+circle2.radius = 3;
+circle2.propertyFields.fill = "color";
+
+
+circle2.events.on("inited", function(event){
+  {#animateBullet(event.target);#}
+})
+
+
+function animateBullet(circle) {
+    var animation = circle.animate([{ property: "scale", from: 1, to: 5 }, { property: "opacity", from: 1, to: 0 }], 10000, am4core.ease.circleOut);
+    animation.events.on("animationended", function(event){
+      animateBullet(event.target.object);
+    })
+}
+
+var colorSet = new am4core.ColorSet();
+
+{#imageSeries.data = [#}
+{#    {% for country, location in map_locations.items %}#}
+{#        {#}
+{#            "title": "{{ country }}",#}
+{#            "latitude": {{ location.lat }},#}
+{#            "longitude": {{ location.lon }},#}
+{#            "color": colorSet.next()#}
+{#        },#}
+{#    {% endfor %}#}
+{#];#}
+</script>
+
+</body>
 </html>
+
+<!-- Subscription Modal -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Subscribe to Updates</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">By submitting your email you accept the fact that we are going to process and store your email address to provide you with the service. We are not going to share your email with any third-party.</p>
+
+                <br>
+
+                <form class="form-inline" action="/subscribe/" method="post">{% csrf_token %}
+                    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group"><label for="email" class="mr-sm-2">Email</label><input name="email" id="email" placeholder="something@idk.cool" type="email" class="form-control"></div>
+                    <input type="hidden" id="country_name" name="country_name" value={{ location }}>
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
