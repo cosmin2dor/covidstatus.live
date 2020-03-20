@@ -1,5 +1,6 @@
 dj-database-url
 django-redis
+geopy
 gunicorn
 asgiref==3.2.5
 certifi==2019.11.28

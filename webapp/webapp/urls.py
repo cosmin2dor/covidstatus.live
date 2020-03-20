@@ -20,6 +20,5 @@ from app.views import subscribe_view
 
 urlpatterns = [
     path('', index_view),
-    path('subscribe/', subscribe_view),
     # path('admin/', admin.site.urls),
 ]
