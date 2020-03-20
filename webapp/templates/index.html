@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33349132-2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -57,7 +57,6 @@
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Total Cases</div>
-                                            <div class="widget-subheading">All confirmed cases</div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,14 +110,14 @@
                                 </div>
                             </div>
 
-{#                            <div class="col-md-2">#}
-{#                                <div class="card card-body" style="box-shadow: none">#}
-{#                                    <h5 class="card-title">Get daily updates about COVID-19 Status!</h5>#}
-{#                                    <button class="btn btn-primary" data-toggle="modal" data-target="#subscriptionModal">#}
-{#                                        SUBSCRIBE#}
-{#                                    </button>#}
-{#                                </div>#}
-{#                            </div>#}
+                            <div class="col-md-2">
+                                <div class="card card-body" style="box-shadow: none">
+                                    <h5 class="card-title">Get updates from our blog</h5>
+                                    <button class="btn btn-primary" onclick="window.location.href='/blog'">
+                                        READ NOW!
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="divider mt-0" style="margin-bottom: 30px;"></div>
@@ -191,8 +190,8 @@
                                         <thead>
                                         <tr>
                                             <th>Country</th>
-                                            <th>Mortality Rate</th>
                                             <th>Total Cases</th>
+                                            <th>Mortality Rate</th>
                                             <th>New Cases</th>
                                             <th>Total Deaths</th>
                                             <th>New Deaths</th>
@@ -205,8 +204,8 @@
                                         {% for name, data in countires.items %}
                                         <tr>
                                             <th scope="row">{{ name }}</th>
-                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.death_rate|intcomma }}%</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-dark">{{ data.total_cases|intcomma }}</div></td>
+                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.death_rate|intcomma }}%</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-primary">{{ data.new_cases|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.total_deaths|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.new_deaths|intcomma }}</div></td>
@@ -228,17 +227,12 @@
                 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
         </div>
     </div>
-<script type="text/javascript" src="{% static 'assets/scripts/main.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'assets/scripts/main.js' %}"></script>#}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
-    {#setTimeout(function() {#}
-    {#    location.reload();#}
-    {#}, 30000);#}
-
-    url = new URL(document.URL);
-
-    if (url.searchParams.get('subscribed')) {
-        console.log("pullaaaa!");
-    }
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
 </script>
 <script>
     var ctx = document.getElementById('global_distribution').getContext('2d');
@@ -269,115 +263,6 @@
         }
     });
 </script>
-<script>
-    /**
- * ---------------------------------------
- * This demo was created using amCharts 4.
- *
- * For more information visit:
- * https://www.amcharts.com/
- *
- * Documentation is available at:
- * https://www.amcharts.com/docs/v4/
- * ---------------------------------------
- */
-
-// Themes begin
-am4core.useTheme(am4themes_animated);
-// Themes end
-
-// Create map instance
-var chart = am4core.create("chartdiv", am4maps.MapChart);
-
-// Set map definition
-chart.geodata = am4geodata_worldLow;
-
-// Set projection
-chart.projection = new am4maps.projections.Miller();
-
-// Create map polygon series
-var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
-
-// Exclude Antartica
-polygonSeries.exclude = ["AQ"];
-
-// Make map load polygon (like country names) data from GeoJSON
-polygonSeries.useGeodata = true;
-
-// Configure series
-var polygonTemplate = polygonSeries.mapPolygons.template;
-polygonTemplate.tooltipText = "{name}";
-polygonTemplate.polygon.fillOpacity = 0.6;
-
-polygonSeries.heatRules.push({
-    "property": "fill",
-    "target": polygonSeries.mapPolygons.template,
-    "min": am4core.color("#6085ff"),
-    "max": am4core.color("#aa0012")
-});
-
-polygonSeries.data = [
-    {% for name, data in countires.items %}
-        {% if data.total_cases_by_1M != "NAN" %}
-            {
-                "id": "{{ data.country_code }}",
-                "value": {{ data.total_cases_by_1M }},
-            },
-        {% endif %}
-    {% endfor %}
-];
-
-polygonTemplate.propertyFields.fill = "fill";
-
-
-// Create hover state and set alternative fill color
-var hs = polygonTemplate.states.create("hover");
-hs.properties.fill = chart.colors.getIndex(0);
-
-// Add image series
-var imageSeries = chart.series.push(new am4maps.MapImageSeries());
-imageSeries.mapImages.template.propertyFields.longitude = "longitude";
-imageSeries.mapImages.template.propertyFields.latitude = "latitude";
-imageSeries.mapImages.template.tooltipText = "{title}";
-imageSeries.mapImages.template.propertyFields.url = "url";
-
-var circle = imageSeries.mapImages.template.createChild(am4core.Circle);
-circle.radius = 3;
-circle.propertyFields.fill = "color";
-
-var circle2 = imageSeries.mapImages.template.createChild(am4core.Circle);
-circle2.radius = 3;
-circle2.propertyFields.fill = "color";
-
-
-circle2.events.on("inited", function(event){
-  {#animateBullet(event.target);#}
-})
-
-
-function animateBullet(circle) {
-    var animation = circle.animate([{ property: "scale", from: 1, to: 5 }, { property: "opacity", from: 1, to: 0 }], 10000, am4core.ease.circleOut);
-    animation.events.on("animationended", function(event){
-      animateBullet(event.target.object);
-    })
-}
-
-var colorSet = new am4core.ColorSet();
-
-{#imageSeries.data = [#}
-{#    {% for country, location in map_locations.items %}#}
-{#        {#}
-{#            "title": "{{ country }}",#}
-{#            "latitude": {{ location.lat }},#}
-{#            "longitude": {{ location.lon }},#}
-{#            "color": colorSet.next()#}
-{#        },#}
-{#    {% endfor %}#}
-{#];#}
-</script>
-
-</body>
-</html>
 
 <!-- Subscription Modal -->
 <div class="modal fade" id="subscriptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -406,3 +291,7 @@ var colorSet = new am4core.ColorSet();
         </div>
     </div>
 </div>
+
+
+</body>
+</html>
