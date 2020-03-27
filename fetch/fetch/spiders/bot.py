@@ -23,6 +23,19 @@ def format_numerical(string):
     else:
         return string.strip().replace(',', '').replace('-', '')
 
+def sort_by_cases(data):
+    sorted_keys = {}
+
+    for k, v in data.items():
+        sorted_keys[v['total_cases']] = k
+
+    sorted_dict = {}
+
+    for key in reversed(sorted(sorted_keys.keys())):
+        k = sorted_keys[key]
+        sorted_dict[k] = data[k]
+
+    return sorted_dict
 
 class Bot(scrapy.Spider):
     name = "bot"
@@ -99,6 +112,8 @@ class Bot(scrapy.Spider):
             }
 
             rows[country_code] = row
+
+        rows = sort_by_cases(rows)
 
         data = {
             'global_cases': global_cases,
