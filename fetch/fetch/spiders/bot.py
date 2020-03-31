@@ -56,7 +56,7 @@ class Bot(scrapy.Spider):
 
         rows = {}
 
-        for idx in range(1, 185):
+        for idx in range(1, 204):
             base_path = "/html/body/div[2]/div[3]/div[1]/div/div[1]/div/table/tbody[1]/tr[{}]/td[{}]//text()"
             country_name = response.xpath(base_path.format(idx, 1)).getall()
 
