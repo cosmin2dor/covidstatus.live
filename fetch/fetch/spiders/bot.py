@@ -21,7 +21,7 @@ def format_numerical(string):
     if is_empty_string(string):
         return 0
     else:
-        return string.strip().replace(',', '')
+        return string.strip().replace(',', '').replace('-', '')
 
 def sort_by_cases(data):
     sorted_keys = {}
