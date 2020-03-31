@@ -55,63 +55,76 @@ class Bot(scrapy.Spider):
         global_recovered = format_numerical(global_stats[2])
 
         rows = {}
+        num_countries = 0
 
-        for idx in range(1, 204):
-            base_path = "/html/body/div[2]/div[3]/div[1]/div/div[1]/div/table/tbody[1]/tr[{}]/td[{}]//text()"
-            country_name = response.xpath(base_path.format(idx, 1)).getall()
+        for i in range(200, 500):
+            base_path = "/html/body/div[2]/div[3]/div[1]/div/div[1]/div/table/tbody[1]/tr[{}]/td[1]//text()"
 
-            if len(country_name) == 3:
-                country_name = country_name[1].strip()
-            else:
-                country_name = country_name[0].strip()
+            if not response.xpath(base_path.format(i)):
+                num_countries = i
+                break
 
-            try:
-                country_code = codes[country_name]
-            except KeyError:
-                country_code = None
+        print("Num countries: {}".format(num_countries))
 
-            try:
-                country_population = int(population[country_code])
-            except KeyError:
-                country_population = None
+        try:
+            for idx in range(1, num_countries):
+                base_path = "/html/body/div[2]/div[3]/div[1]/div/div[1]/div/table/tbody[1]/tr[{}]/td[{}]//text()"
+                country_name = response.xpath(base_path.format(idx, 1)).getall()
 
-            total_cases = int(format_numerical(response.xpath(base_path.format(idx, 2)).get()))
-            new_cases = int(format_numerical(response.xpath(base_path.format(idx, 3)).get()))
-            total_deaths = int(format_numerical(response.xpath(base_path.format(idx, 4)).get()))
-            new_deaths = int(format_numerical(response.xpath(base_path.format(idx, 5)).get()))
-            total_recovered = int(format_numerical(response.xpath(base_path.format(idx, 6)).get()))
-            active_cases = int(format_numerical(response.xpath(base_path.format(idx, 7)).get()))
-            critical = int(format_numerical(response.xpath(base_path.format(idx, 8)).get()))
-            total_cases_by_1M = float(format_numerical(response.xpath(base_path.format(idx, 9)).get()))
+                if len(country_name) == 3:
+                    country_name = country_name[1].strip()
+                else:
+                    country_name = country_name[0].strip()
 
-            try:
-                total_cases_by_population = int((float(total_cases) / country_population) * 1000000.0)
-            except TypeError:
-                total_cases_by_population = None
+                try:
+                    country_code = codes[country_name]
+                except KeyError:
+                    country_code = None
+
+                try:
+                    country_population = int(population[country_code])
+                except KeyError:
+                    country_population = None
+
+                total_cases = int(format_numerical(response.xpath(base_path.format(idx, 2)).get()))
+                new_cases = int(format_numerical(response.xpath(base_path.format(idx, 3)).get()))
+                total_deaths = int(format_numerical(response.xpath(base_path.format(idx, 4)).get()))
+                new_deaths = int(format_numerical(response.xpath(base_path.format(idx, 5)).get()))
+                total_recovered = int(format_numerical(response.xpath(base_path.format(idx, 6)).get()))
+                active_cases = int(format_numerical(response.xpath(base_path.format(idx, 7)).get()))
+                critical = int(format_numerical(response.xpath(base_path.format(idx, 8)).get()))
+                total_cases_by_1M = float(format_numerical(response.xpath(base_path.format(idx, 9)).get()))
+
+                try:
+                    total_cases_by_population = int((float(total_cases) / country_population) * 1000000.0)
+                except TypeError:
+                    total_cases_by_population = None
 
 
-            print("country={}, total_cases={}, new_cases={}, total_deaths={}, new_deaths={}, total_recovered={}, active_cases={}, critical={}, population={}, total_cases_by_1M={}, total_cases_by_population={}".format(
-                country_name, total_cases, new_cases, total_deaths, new_deaths, total_recovered, active_cases, critical, country_population, total_cases_by_1M, total_cases_by_population
-            ))
-            
-            death_rate = float(total_deaths) / int(total_cases) * 100.0
-            death_rate = "%.2f" % death_rate
+                print("country={}, total_cases={}, new_cases={}, total_deaths={}, new_deaths={}, total_recovered={}, active_cases={}, critical={}, population={}, total_cases_by_1M={}, total_cases_by_population={}".format(
+                    country_name, total_cases, new_cases, total_deaths, new_deaths, total_recovered, active_cases, critical, country_population, total_cases_by_1M, total_cases_by_population
+                ))
+                
+                death_rate = float(total_deaths) / int(total_cases) * 100.0
+                death_rate = "%.2f" % death_rate
 
-            row = {
-                'country_name': country_name,
-                'total_cases': total_cases,
-                'new_cases': new_cases,
-                'total_deaths': total_deaths,
-                'new_deaths': new_deaths,
-                'total_recovered': total_recovered,
-                'active_cases': active_cases,
-                'critical': critical,
-                'total_cases_by_1M': total_cases_by_1M,
-                'death_rate': death_rate,
-                'total_cases_by_population': total_cases_by_population,
-            }
+                row = {
+                    'country_name': country_name,
+                    'total_cases': total_cases,
+                    'new_cases': new_cases,
+                    'total_deaths': total_deaths,
+                    'new_deaths': new_deaths,
+                    'total_recovered': total_recovered,
+                    'active_cases': active_cases,
+                    'critical': critical,
+                    'total_cases_by_1M': total_cases_by_1M,
+                    'death_rate': death_rate,
+                    'total_cases_by_population': total_cases_by_population,
+                }
 
-            rows[country_code] = row
+                rows[country_code] = row
+        except IndexError:
+            print("Index Out of Bounds!")
 
         rows = sort_by_cases(rows)
 
