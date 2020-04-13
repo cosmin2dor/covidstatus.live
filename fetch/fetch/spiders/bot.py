@@ -23,6 +23,18 @@ def format_numerical(string):
     else:
         return string.strip().replace(',', '').replace('-', '')
 
+def to_integer(string):
+    try:
+        return int(string)
+    except ValueError:
+        return 0
+
+def to_float(string):
+    try:
+        return float(string)
+    except ValueError:
+        return 0.0
+
 def sort_by_cases(data):
     sorted_keys = {}
 
@@ -86,14 +98,14 @@ class Bot(scrapy.Spider):
                 except KeyError:
                     country_population = None
 
-                total_cases = int(format_numerical(response.xpath(base_path.format(idx, 2)).get()))
-                new_cases = int(format_numerical(response.xpath(base_path.format(idx, 3)).get()))
-                total_deaths = int(format_numerical(response.xpath(base_path.format(idx, 4)).get()))
-                new_deaths = int(format_numerical(response.xpath(base_path.format(idx, 5)).get()))
-                total_recovered = int(format_numerical(response.xpath(base_path.format(idx, 6)).get()))
-                active_cases = int(format_numerical(response.xpath(base_path.format(idx, 7)).get()))
-                critical = int(format_numerical(response.xpath(base_path.format(idx, 8)).get()))
-                total_cases_by_1M = float(format_numerical(response.xpath(base_path.format(idx, 9)).get()))
+                total_cases = to_integer(format_numerical(response.xpath(base_path.format(idx, 2)).get()))
+                new_cases = to_integer(format_numerical(response.xpath(base_path.format(idx, 3)).get()))
+                total_deaths = to_integer(format_numerical(response.xpath(base_path.format(idx, 4)).get()))
+                new_deaths = to_integer(format_numerical(response.xpath(base_path.format(idx, 5)).get()))
+                total_recovered = to_integer(format_numerical(response.xpath(base_path.format(idx, 6)).get()))
+                active_cases = to_integer(format_numerical(response.xpath(base_path.format(idx, 7)).get()))
+                critical = to_integer(format_numerical(response.xpath(base_path.format(idx, 8)).get()))
+                total_cases_by_1M = to_float(format_numerical(response.xpath(base_path.format(idx, 9)).get()))
 
                 try:
                     total_cases_by_population = int((float(total_cases) / country_population) * 1000000.0)
