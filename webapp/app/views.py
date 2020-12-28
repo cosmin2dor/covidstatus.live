@@ -37,15 +37,35 @@ def locate_user(request):
     return country_code
 
 
-def index_view(request):
-    country_code = locate_user(request)
+def index_view(request, *args, **kwargs):
 
     with open('data.json') as json_file:
         data = json.load(json_file)
+
+        # Set defaults if location fails
+        country_code = 'US'
+        my_country = data['countires'][country_code]
+
         try:
-            my_country = data['countires'][country_code]
+            country_name = kwargs['country_name']
         except KeyError:
-            my_country = data['countires']['US']
+            country_name = None
+
+        if country_name is not None:
+            for code, country in data['countires'].items():
+                if country_name.lower() == country['country_name'].lower() or \
+                    country_name.lower() == code.lower() or \
+                    country_name.lower().replace('-', ' ') == country['country_name'].lower():
+                    my_country = country
+                    country_code = code
+                    break
+        else:
+            country_code = locate_user(request)
+
+            try:
+                my_country = data['countires'][country_code]
+            except KeyError:
+                pass
 
         active_cases = int(data['global_cases']) - int(data['global_recovered']) - int(data['gloabl_deaths'])
         my_country_rate = "{0:.2f}%".format(float(my_country['total_deaths']) / int(my_country['total_cases']) * 100)

@@ -19,6 +19,7 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', index_view),
+    path('<str:country_name>', index_view),
     path('message/', message_view),
     path('simpleboard/', admin.site.urls),
 ]

@@ -125,6 +125,11 @@ class Bot(scrapy.Spider):
                 death_rate = float(total_deaths) / int(total_cases) * 100.0
                 death_rate = "%.2f" % death_rate
 
+                if country_name == "UK":
+                    country_name = "United Kingdom"
+                elif country_name == "USA":
+                    country_name = "United States"
+
                 row = {
                     'country_name': country_name,
                     'total_cases': total_cases,
