@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 import requests
 import json
+from datetime import datetime
 from django.core.cache import cache
-from .forms import SubscribeForm
-from .models import Subscription
+from .forms import SubscribeForm, MessageForm
+from .models import Subscription, Message
 
 
 def get_client_ip(request):
@@ -36,29 +37,8 @@ def locate_user(request):
     return country_code
 
 
-# def generate_locations(data):
-#     result = {}
-#
-#     print(data['countires'])
-#
-#     for country, value in data['countires'].items():
-#         if int(value['total_cases']) > 0:
-#             location = geolocate(country=country)
-#             try:
-#                 result[country] = {
-#                     'lat': location[0],
-#                     'lon': location[1],
-#                 }
-#             except TypeError:
-#                 continue
-#
-#     return result
-
-
 def index_view(request):
     country_code = locate_user(request)
-
-    print(country_code)
 
     with open('data.json') as json_file:
         data = json.load(json_file)
@@ -69,6 +49,16 @@ def index_view(request):
 
         active_cases = int(data['global_cases']) - int(data['global_recovered']) - int(data['gloabl_deaths'])
         my_country_rate = "{0:.2f}%".format(float(my_country['total_deaths']) / int(my_country['total_cases']) * 100)
+
+        try:
+            dt = datetime.fromtimestamp(data['timestamp']).strftime("%B %d %Y %H:%M:%S")
+        except:
+            dt = None
+
+        try:
+            messages = Message.objects.order_by('-date').filter(approved=True)
+        except:
+            messages = None
 
         my_country_data = {
             "country_name": my_country['country_name'],
@@ -91,6 +81,8 @@ def index_view(request):
             'my_country_name': country_code,
             'my_country_data': my_country_data,
             'countires': data['countires'],
+            'messages': messages,
+            'datetime': dt,
         })
 
 
@@ -106,3 +98,16 @@ def subscribe_view(request):
             s.save()
 
         return redirect('/?subscribed')
+
+
+def message_view(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+
+        if form.is_valid():
+            message = form.cleaned_data['message']
+
+            m = Message(message=message)
+            m.save()
+
+        return redirect('/')

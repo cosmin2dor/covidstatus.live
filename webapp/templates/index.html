@@ -23,6 +23,7 @@
 {% load static %}
 <link href="{% static 'main.css' %}" rel="stylesheet">
 <!-- Hotjar Tracking Code for covidstatus.live -->
+<script src="https://kit.fontawesome.com/398cc3c757.js" crossorigin="anonymous"></script>
 <script>
     (function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -33,12 +34,18 @@
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>
-<script data-ad-client="ca-pub-3261993669263021" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <div class="app-main">
+        <div class="">
             <div class="col-lg-12">
+
+                    <br>
+
+                    <div class="mb-3 card text-white card-body bg-danger">
+                        <h5 class="text-white card-title"><i class="fas fa-exclamation-circle"></i> Be responsible <i class="fas fa-exclamation-circle"></i></h5>
+                        <h6>Please <b>STAY HOME</b> as much as possible. Don't go out for random walks, don't meet friends face-to-face, protect the elders and buy responsibly. The only way to stop spreading this virus is by showing unity. Always inform yourself of trusted and <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public" target="_blank" class="text-white"><u>official sources.</u></a></h6>
+                    </div>
 
                     <div class="main-card mb-3">
                         <h1>{{ my_country_data.country_name }} Corona Virus Live Status</h1>
@@ -64,10 +71,34 @@
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-primary" style="font-size: 2.5rem">{{ my_country_data.new_cases|intcomma }}</div>
+                                            <div class="widget-numbers text-primary" style="font-size: 2.5rem">
+                                                {% if my_country_data.new_cases == 0 %}
+                                                    0
+                                                {% else %}
+                                                    +{{ my_country_data.new_cases|intcomma }}
+                                                {% endif %}
+                                            </div>
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">New Cases Today</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="widget-content">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-right ml-0 mr-3">
+                                            <div class="widget-numbers text-danger" style="font-size: 2.5rem">
+                                                {% if my_country_data.new_deaths == 0 %}
+                                                    0
+                                                {% else %}
+                                                    +{{ my_country_data.new_deaths }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">New Deaths Today</div>
                                         </div>
                                     </div>
                                 </div>
@@ -88,18 +119,6 @@
                                 <div class="widget-content">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-right ml-0 mr-3">
-                                            <div class="widget-numbers text-danger" style="font-size: 2.5rem">{{ my_country_data.new_deaths }}</div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">New Deaths Today</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-right ml-0 mr-3">
                                             <div class="widget-numbers text-danger" style="font-size: 2.5rem">{{ my_country_data.death_rate }}</div>
                                         </div>
                                         <div class="widget-content-left">
@@ -108,21 +127,21 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-2">
-                                <div class="card card-body" style="box-shadow: none">
-                                    <h5 class="card-title">Get updates from our blog</h5>
-                                    <button class="btn btn-primary" onclick="window.location.href='/blog'">
-                                        READ NOW!
-                                    </button>
+                                <div class="widget-content">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-right ml-0 mr-3">
+                                            <link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/A2ufJb8"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""><span style="margin-left:15px;font-size:19px !important;">Buy me a coffee!</span></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <h6 class="text-muted">Last update: {{ datetime }} UTC +0</h6>
+
                     <div class="divider mt-0" style="margin-bottom: 30px;"></div>
-
-            <div id="chartdiv"></div>
-
 
                     <h1>Worldwide Status</h1>
 
@@ -169,31 +188,98 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    </div>
-
-                    <div class="col-lg-8">
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Case Distribution</h5>
-                                <canvas id="global_distribution"></canvas>
+                        <div class="col-md-12 col-xl-12">
+                            <div class="card mb-3 widget-content bg-premium-dark">
+                                <div class="widget-content-wrapper text-white">
+                                    <div class="widget-content-left">
+                                        <div class="widget-heading">Get updates from our blog</div>
+{#                                        <div class="widget-subheading">Total revenue streams</div>#}
+                                    </div>
+                                    <div class="widget-content-right">
+                                        <button class="btn btn-primary" onclick="window.location.href='/blog'">
+                                                    READ NOW!
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xl-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Case Distribution</h5>
+                                    <canvas id="global_distribution"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                     </div>
 
+                    <div class="col-lg-8">
+                        <div id="chartdiv"></div>
+                    </div>
+
+                        <div class="col-md-12 col-xl-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body">
+
+                                    <h4 class="text-primary"><i class="fas fa-stethoscope"></i> Please take your time and share your positive thoughts about our beloved doctors and health personnel. We will make sure that your support reaches them somehow.</h4>
+
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12">
+                                            <ul class="newsticker">
+                                                {% for message in messages %}
+                                                    <li>
+                                                        {{ message.message }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12">
+                                            <form method="post" action="message/">{% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-lg-10">
+                                                        <input name="message" id="message" placeholder="Your support message for a doctor" type="text" class="form-control">
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <button class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+{#                <div class="divider mt-0" style="margin-bottom: 30px;"></div>#}
+
+                    <form class="form-inline">
+                        <div class="position-relative form-group">
+                            <input id="tabel_search" class="mr-2 form-control" placeholder="Search country">
+                        </div>
+                    </form>
+
+                    <br>
+
+
                         <div class="main-card mb-3 card">
                             <div class="card-body"><h5 class="card-title">Worldwide</h5>
-                                <div class="table-responsive">
+                                <div class="table-responsive table-hover" id="world_table">
                                     <table class="mb-0 table">
                                         <thead>
                                         <tr>
                                             <th>Country</th>
                                             <th>Total Cases</th>
-                                            <th>Mortality Rate</th>
                                             <th>New Cases</th>
-                                            <th>Total Deaths</th>
                                             <th>New Deaths</th>
+                                            <th>Mortality Rate</th>
+                                            <th>Total Deaths</th>
                                             <th>Total Recovered</th>
                                             <th>Active Cases</th>
                                             <th>Critical Cases</th>
@@ -204,10 +290,10 @@
                                         <tr>
                                             <th scope="row">{{ data.country_name }}</th>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-dark">{{ data.total_cases|intcomma }}</div></td>
-                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.death_rate|intcomma }}%</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-primary">{{ data.new_cases|intcomma }}</div></td>
+                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.new_deaths }}</div></td>
+                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.death_rate|intcomma }}%</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.total_deaths|intcomma }}</div></td>
-                                            <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.new_deaths|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-success">{{ data.total_recovered|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-warning">{{ data.active_cases|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.critical|intcomma }}</div></td>
@@ -227,10 +313,12 @@
     </div>
 {#<script type="text/javascript" src="{% static 'assets/scripts/main.js' %}"></script>#}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="{% static 'assets/scripts/jquery.newsTicker.js' %}"></script>
 <script>
     setTimeout(function() {
         location.reload();
-    }, 30000);
+    }, 1200000);
 </script>
 <script>
     var ctx = document.getElementById('global_distribution').getContext('2d');
@@ -275,6 +363,8 @@
 
     // Set projection
     chart.projection = new am4maps.projections.Miller();
+
+    chart.tapToActivate = true;
 
     // Create map polygon series
     var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
@@ -347,17 +437,22 @@
     }
 
     var colorSet = new am4core.ColorSet();
+</script>
+<script>
+    $('.newsticker').newsTicker({
+        max_rows: 5,
+    });
+</script>
+ <script>
+    $(document).ready(function(){
+        $("#tabel_search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
 
-    {#imageSeries.data = [#}
-    {#    {% for country, location in map_locations.items %}#}
-    {#        {#}
-    {#            "title": "{{ country }}",#}
-    {#            "latitude": {{ location.lat }},#}
-    {#            "longitude": {{ location.lon }},#}
-    {#            "color": colorSet.next()#}
-    {#        },#}
-    {#    {% endfor %}#}
-    {#];#}
+            $("#world_table tbody tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
 </script>
 
 <!-- Subscription Modal -->
