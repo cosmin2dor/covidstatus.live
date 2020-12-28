@@ -288,7 +288,7 @@
                                         <tbody>
                                         {% for name, data in countires.items %}
                                         <tr>
-                                            <th scope="row">{{ data.country_name }}</th>
+                                            <th scope="row"><a href="/{{ data.url_name }}">{{ data.country_name }}</a></th>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-dark">{{ data.total_cases|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-primary">{{ data.new_cases|intcomma }}</div></td>
                                             <td><div class="mb-2 mr-2 badge badge-pill badge-danger">{{ data.new_deaths }}</div></td>

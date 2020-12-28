@@ -1,8 +1,5 @@
 #!/bin/bash
 
-watch -n
-
-
 while [ True ]
 do
 	scrapy crawl bot -a filename=data

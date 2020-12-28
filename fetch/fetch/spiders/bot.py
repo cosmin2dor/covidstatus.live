@@ -132,6 +132,7 @@ class Bot(scrapy.Spider):
 
                 row = {
                     'country_name': country_name,
+                    'url_name': country_name.lower().replace('.', '').replace(' ', '-'),
                     'total_cases': total_cases,
                     'new_cases': new_cases,
                     'total_deaths': total_deaths,

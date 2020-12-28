@@ -53,7 +53,8 @@ def index_view(request, *args, **kwargs):
 
         if country_name is not None:
             for code, country in data['countires'].items():
-                if country_name.lower() == country['country_name'].lower() or \
+                if country_name == country['url_name'] or \
+                    country_name.lower() == country['country_name'].lower() or \
                     country_name.lower() == code.lower() or \
                     country_name.lower().replace('-', ' ') == country['country_name'].lower():
                     my_country = country
