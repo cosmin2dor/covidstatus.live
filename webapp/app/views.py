@@ -36,25 +36,6 @@ def locate_user(request):
     return country_code
 
 
-# def generate_locations(data):
-#     result = {}
-#
-#     print(data['countires'])
-#
-#     for country, value in data['countires'].items():
-#         if int(value['total_cases']) > 0:
-#             location = geolocate(country=country)
-#             try:
-#                 result[country] = {
-#                     'lat': location[0],
-#                     'lon': location[1],
-#                 }
-#             except TypeError:
-#                 continue
-#
-#     return result
-
-
 def index_view(request):
     country_code = locate_user(request)
 

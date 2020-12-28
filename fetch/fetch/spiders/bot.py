@@ -53,6 +53,10 @@ def sort_by_cases(data):
 class Bot(scrapy.Spider):
     name = "bot"
 
+    def __init__(self, filename, **kwargs):
+        self.filename = filename
+        super().__init__(**kwargs)
+
     def start_requests(self):
         urls = [
             'https://www.worldometers.info/coronavirus/',
@@ -150,5 +154,5 @@ class Bot(scrapy.Spider):
             'timestamp': time.time()
         }
 
-        with open('../webapp/data.json', 'w') as outfile:
+        with open('../webapp/{}.json'.format(self.filename), 'w+') as outfile:
             json.dump(data, outfile)

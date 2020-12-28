@@ -83,10 +83,15 @@ DATABASES = {
     }
 }
 
+if DEBUG:
+    redis_hostname = "127.0.0.1"
+else:
+    redis_hostname = "redis"
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": f"redis://{redis_hostname}:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
